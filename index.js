@@ -1,10 +1,13 @@
 const http = require('http');
 const { Server } = require('socket.io');
 
+// קובע פורט דינמי (ל־Render) או 4000 מקומית
+const PORT = process.env.PORT || 4000;
+
 const server = http.createServer();
 const io = new Server(server, {
   cors: {
-    origin: "*", // לאפשר גישה מה-Client (Next.js)
+    origin: "*", // אפשר להקשיח בהמשך ל־https://emoji-battle.vercel.app
   },
 });
 
@@ -26,6 +29,6 @@ io.on('connection', (socket) => {
   });
 });
 
-server.listen(4000, () => {
-  console.log('🚀 Socket server running on http://localhost:4000');
+server.listen(PORT, '0.0.0.0', () => {
+  console.log(`🚀 Socket server running on http://0.0.0.0:${PORT}`);
 });

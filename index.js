@@ -1,13 +1,20 @@
 const http = require('http');
+const express = require('express');
 const { Server } = require('socket.io');
 
-// קובע פורט דינמי (ל־Render) או 4000 מקומית
+const app = express();
+const server = http.createServer(app);
 const PORT = process.env.PORT || 4000;
 
-const server = http.createServer();
+// 🔁 מסלול health check – נדרש ל-Render
+app.get('/healthz', (req, res) => {
+  res.status(200).send('OK');
+});
+
+// 🟢 הגדרת Socket.io
 const io = new Server(server, {
   cors: {
-    origin: "*", // אפשר להקשיח בהמשך ל־https://emoji-battle.vercel.app
+    origin: '*',
   },
 });
 
@@ -29,6 +36,7 @@ io.on('connection', (socket) => {
   });
 });
 
+// 🚀 הפעלת השרת
 server.listen(PORT, '0.0.0.0', () => {
-  console.log(`🚀 Socket server running on http://0.0.0.0:${PORT}`);
+  console.log(`🚀 Server is running on http://0.0.0.0:${PORT}`);
 });
